@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Random Pizza</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>Random Pizza Shower</h1>
+    <hr>
+    <button type="button" id="getrandompizza" onclick="getRandomPizza()">Get Random Pizza </button>
+    <div id="randompizzacontainer">
+        <ul>
+            <li id="pizzashower">
+                <!-- Pizza data from backend will come here -->
+            </li>
+        </ul>
+
+    </div>
+
+    <button type="button" id="getallpizzabutton" onclick="getAllPizza()">Get All Pizzas</button>
+
+    <div id="allpizzas">
+        <ul id="allpizzalist">
+
+        </ul>
+    </div>
+
+    <script>
+
+        async function getRandomPizza() {
+            // Fetch info from server using the Fetch API
+            fetch("http://localhost:5298/", {
+                method: "GET"
+            })
+                .then((response) => {
+                    // Check if the response is okay
+                    if (!response.ok) {
+                        throw new Error(`Error fetching data: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log(data); // Log the data to confirm structure
+
+                    // Display data on the webpage
+                    const pizzaShower = document.getElementById("pizzashower");
+                    pizzaShower.innerHTML = `Pizza: ${data.pizza}<br>Topping: ${data.topping}`;
+                })
+                .catch((error) => {
+                    console.error("Error:", error); // Log the error
+                });
+
+        }
+
+        async function getAllPizza() {
+            document.getElementById("allpizzalist").innerHTML = "";
+            // Fetch all pizzas 
+            fetch("http://localhost:5298/allpizzas", {
+                method: "GET"
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error("Error fetching data: " + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    const allPizzaList = document.getElementById("allpizzalist");
+                    data.forEach((element, index) => {
+                        console.log(element);
+
+                        // Create a list item
+                        const listItem = document.createElement("li");
+
+                        // Set the text for the list item
+                        listItem.textContent = `${index + 1}. Pizza: ${element[0]}, Topping: ${element[1]}`;
+
+                        // Add draggable attribute
+                        listItem.setAttribute("draggable", true);
+
+                        // Add dragstart event listener
+                        listItem.addEventListener("dragstart", (event) => {
+                            console.log(`Dragging: ${listItem.textContent}`);
+                            event.dataTransfer.setData("text/plain", listItem.textContent);
+                        });
+
+                        // Append the list item to the unordered list
+                        allPizzaList.appendChild(listItem);
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
+        }
+
+    </script>
+</body>
+
+</html>

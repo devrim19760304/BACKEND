@@ -1,0 +1,29 @@
+# Build artifacts
+bin/
+obj/
+
+# User-specific files
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code settings
+.vscode/
+
+# Visual Studio working directory
+.vs/
+
+# Logs
+*.log
+
+# NuGet packages
+*.nupkg
+packages/
+
+# Crash and dump reports
+*.pid
+*.svclog
+
+# OS-specific files
+.DS_Store
+Thumbs.db
